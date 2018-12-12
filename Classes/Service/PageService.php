@@ -137,6 +137,10 @@ class PageService implements SingletonInterface
             // Note: 't3ver_oid' is analysed in order to make versioned records inherit the original record's
             // configuration as an emulated first parent page.
             $resolveParentPageUid = (integer) (0 > $page['pid'] ? $page['t3ver_oid'] : $page['pid']);
+            // Abort if uid is 0 (root level) to avoid endless loop.
+            if (0 === $resolveParentPageUid) {
+                break;
+            }
             $page = $this->workspacesAwareRecordService->getSingle(
                 'pages',
                 $fieldList,
